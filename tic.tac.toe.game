@@ -1,0 +1,58 @@
+def print_board(board):
+    print("-------------")
+    for row in board:
+        print("|", end=" ")
+        for cell in row:
+            print(cell, end=" | ")
+        print("\n-------------")
+
+def get_move(player):
+    while True:
+        move = input(f"Player {player}, enter your move (1-9): ")
+        if move.isdigit() and 1 <= int(move) <= 9:
+            return int(move)
+        else:
+            print("Invalid move. Please enter a number between 1 and 9.")
+
+def make_move(board, move, player):
+    row = (move - 1) // 3
+    col = (move - 1) % 3
+    if board[row][col] == " ":
+        board[row][col] = player
+        return True
+    else:
+        return False
+
+def check_winner(board):
+    for i in range(3):
+        if board[i][0] == board[i][1] == board[i][2] != " ":
+            return board[i][0]
+        if board[0][i] == board[1][i] == board[2][i] != " ":
+            return board[0][i]
+    if board[0][0] == board[1][1] == board[2][2] != " ":
+        return board[0][0]
+    if board[0][2] == board[1][1] == board[2][0] != " ":
+        return board[0][2]
+    return None
+
+def play_game():
+    board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
+    player = "X"
+
+    while True:
+        print_board(board)
+        move = get_move(player)
+        if make_move(board, move, player):
+            winner = check_winner(board)
+            if winner:
+                print(f"Player {winner} wins!")
+                break
+            elif all(cell != " " for row in board for cell in row):
+                print("It's a tie!")
+                break
+            player = "O" if player == "X" else "X"
+        else:
+            print("Invalid move. Please try again.")
+
+if __name__ == "__main__":
+    play_game()
